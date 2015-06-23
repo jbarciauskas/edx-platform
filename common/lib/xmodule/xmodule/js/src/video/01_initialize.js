@@ -9,13 +9,22 @@
  *
  * @module Initialize
  */
+(function(requirejs, define) {
+    requirejs.config({
+        paths: {
+            'moment': 'xmodule/include/common_static/js/vendor/moment.min'
+        }
+    });
+
+}).call(this, RequireJS.requirejs, define);
+
 
 (function (requirejs, require, define) {
 
 define(
 'video/01_initialize.js',
-['video/03_video_player.js', 'video/00_i18n.js'],
-function (VideoPlayer, i18n) {
+['video/03_video_player.js', 'video/00_i18n.js', 'moment'],
+function (VideoPlayer, i18n, moment) {
     /**
      * @function
      *
@@ -75,7 +84,8 @@ function (VideoPlayer, i18n) {
         setSpeed: setSpeed,
         speedToString: speedToString,
         trigger: trigger,
-        youtubeId: youtubeId
+        youtubeId: youtubeId,
+        isYoutubeAvailable: isYoutubeAvailable
     },
 
         _youtubeApiDeferred = null,
@@ -619,8 +629,9 @@ function (VideoPlayer, i18n) {
 
         metadataXHRs = _.map(this.videos, function (url, speed) {
             return self.getVideoMetadata(url, function (data) {
-                if (data.data) {
-                    self.metadata[data.data.id] = data.data;
+                if (data.items.length > 0) {
+                    var metaDataItem = data.items[0];
+                    self.metadata[metaDataItem.id] = metaDataItem.contentDetails;
                 }
             });
         });
@@ -673,13 +684,20 @@ function (VideoPlayer, i18n) {
         }
 
         return $.ajax({
-            url: [
-                document.location.protocol, '//', this.config.ytTestUrl, url,
-                '?v=2&alt=jsonc'
-            ].join(''),
-            dataType: 'jsonp',
+            url: ['https:', '//', this.config.ytTestUrl, '?id=', url,
+                '&part=contentDetails&key=', this.config.ytKey ,'&referrer=*.edx.org/*'].join(''),
             timeout: this.config.ytTestTimeout,
             success: _.isFunction(callback) ? callback : null
+        });
+    }
+
+    function isYoutubeAvailable() {
+        // Todo, Change this mechanism, this has false positives.
+        return $.ajax({
+            url: ['https:', '//', 'www.youtube.com/'].join(''),
+            timeout: this.config.ytTestTimeout,
+            type: 'HEAD',
+            headers: {"Access-Control-Allow-Origin": "*"}
         });
     }
 
@@ -693,7 +711,7 @@ function (VideoPlayer, i18n) {
 
     function getDuration() {
         try {
-            return this.metadata[this.youtubeId()].duration;
+            return moment.duration(this.metadata[this.youtubeId()].duration, moment.ISO_8601).asSeconds();
         } catch (err) {
             return _.result(this.metadata[this.youtubeId('1.0')], 'duration') || 0;
         }
