@@ -78,24 +78,24 @@
         '7tqY6eQzVhE': {
             contentDetails : {
                 id: '7tqY6eQzVhE',
-                duration: 300
+                duration: 'PT5M0S'
             }
         },
         'cogebirgzzM': {
             contentDetails : {
                 id: 'cogebirgzzM',
-                duration: 200
+                duration: 'PT3M20S'
             }
         },
         'abcdefghijkl': {
             contentDetails : {
                 id: 'abcdefghijkl',
-                duration: 400
+                duration: 'PT6M40S'
             }
         },
         bogus: {
             contentDetails : {
-                duration: 100
+                duration: 'PT1M40S'
             }
         }
     };
@@ -176,7 +176,7 @@
                 return;
             } else if (settings.url === '/save_user_state') {
                 return {success: true};
-            } else if (settings.url === 'http://www.youtube.com/iframe_api') {
+            } else if (settings.url.match(/youtube\.com\/iframe_api$/)) {
                 // Stub YouTube API.
                 window.YT = stubbedYT;
 
