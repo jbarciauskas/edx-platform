@@ -110,6 +110,10 @@ class TestPaverReportViolationsCounts(unittest.TestCase):
         actual_count = pavelib.quality._get_count_from_last_line(self.f.name, "python_complexity")  # pylint: disable=protected-access
         self.assertEqual(actual_count, None)
 
+    def test_no_complexity_report(self):
+        with self.assertRaises(BuildFailure):
+            pavelib.quality._get_count_from_last_line("non-existent-file", "python_complexity")  # pylint: disable=protected-access
+
     def test_generic_value(self):
         """
         Default behavior is to look for an integer appearing at head of line

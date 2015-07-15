@@ -249,11 +249,11 @@ def run_complexity():
             complexity_metric,
             (Env.METRICS_DIR / "python_complexity")
         )
+        print "--> Python cyclomatic complexity report complete."
+        print "radon cyclomatic complexity score: {metric}".format(metric=str(complexity_metric))
+
     except BuildFailure:
         print "ERROR: Unable to calculate python-only code-complexity."
-
-    print "--> Python cyclomatic complexity report complete. Report is available in the reports directory."
-    print "The score ({metric}) is on a 1-100 scale, where 1-5 is an A.".format(metric=str(complexity_metric))
 
 
 @task
@@ -320,9 +320,14 @@ def _get_last_report_line(filename):
     """
     Returns the last line of a given file. Used for getting output from quality output files.
     """
-    with open(filename, 'r') as report_file:
-        lines = report_file.readlines()
-        return lines[len(lines) - 1]
+    file_not_found_message = "Complexity log file not found"
+    if os.path.isfile(filename):
+        with open(filename, 'r') as report_file:
+            lines = report_file.readlines()
+            return lines[len(lines) - 1]
+    else:
+        # Raise a build error if the file is not found
+        raise BuildFailure(file_not_found_message)
 
 
 def _get_count_from_last_line(filename, file_type):
