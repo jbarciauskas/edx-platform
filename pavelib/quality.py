@@ -252,7 +252,8 @@ def run_complexity():
     except BuildFailure:
         print "ERROR: Unable to calculate python-only code-complexity."
 
-    print "--> Python cyclomatic complexity report complete. Available in the reports directory."
+    print "--> Python cyclomatic complexity report complete. Report is available in the reports directory."
+    print "The score ({metric}) is on a 1-100 scale, where 1-5 is an A.".format(metric=str(complexity_metric))
 
 
 @task
