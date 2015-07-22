@@ -263,6 +263,7 @@ def get_thread_list(
 
     Raises:
 
+    ValidationError: if an invalid value is passed for a field
     ValueError: if more than one of the mutually exclusive parameters is
       provided
     Http404: if the requesting user does not have access to the requested course
@@ -293,7 +294,9 @@ def get_thread_list(
         if view in ["unread", "unanswered"]:
             query_params[view] = "true"
         else:
-            ValidationError({'view': ['Invalid value']})
+            ValidationError({
+                "view": ["Invalid value. '{}' must be 'unread' or 'unanswered'".format(view)]
+            })
 
     if following:
         threads, result_page, num_pages = context["cc_requester"].subscribed_threads(query_params)
