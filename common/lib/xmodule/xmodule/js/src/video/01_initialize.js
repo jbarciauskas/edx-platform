@@ -697,6 +697,8 @@ function (VideoPlayer, i18n) {
                 timeout: this.config.ytTestTimeout,
                 success: _.isFunction(callback) ? callback : null
             });
+        } else {
+            return $.Deferred().reject().promise();
         }
     }
 

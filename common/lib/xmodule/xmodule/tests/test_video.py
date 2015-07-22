@@ -737,7 +737,7 @@ class VideoDescriptorIndexingTestCase(unittest.TestCase):
             'API': 'www.youtube.com/iframe_api',
 
             # URL to get YouTube metadata
-            'METADATA_URL ': 'www.googleapis.com/youtube/v3/videos/',
+            'METADATA_URL': 'www.googleapis.com/youtube/v3/videos/',
 
             # Current youtube api for requesting transcripts.
             # For example: http://video.google.com/timedtext?lang=en&v=j_jEn79vS3g.
