@@ -690,12 +690,14 @@ function (VideoPlayer, i18n) {
         if (!(_.isString(url))) {
             url = this.videos['1.0'] || '';
         }
-
-        return $.ajax({
-            url: [this.config.ytMetadataUrl, '?id=', url, '&part=contentDetails&key=', this.config.ytKey].join(''),
-            timeout: this.config.ytTestTimeout,
-            success: _.isFunction(callback) ? callback : null
-        });
+        // Will hit the API URL iF YT key is defined in settings.
+        if (this.config.ytKey) {
+            return $.ajax({
+                url: [this.config.ytMetadataUrl, '?id=', url, '&part=contentDetails&key=', this.config.ytKey].join(''),
+                timeout: this.config.ytTestTimeout,
+                success: _.isFunction(callback) ? callback : null
+            });
+        }
     }
 
     function youtubeId(speed) {
