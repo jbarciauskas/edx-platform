@@ -89,9 +89,6 @@ FEATURES['LICENSING'] = True
 XBLOCK_SETTINGS = {
     "VideoDescriptor": {
         "licensing_enabled": True
-    },
-    'VideoModule': {
-        'YOUTUBE_API_KEY': 'YOUTUBE_API_TEST_KEY'
     }
 }
 
