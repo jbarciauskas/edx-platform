@@ -130,7 +130,7 @@
         }
         return spy.andCallFake(function (settings) {
             var match = settings.url
-                    .match(/googleapis.com\/.+\/videos\/\?id=(.+)&part=contentDetails/),
+                    .match(/googleapis\.com\/.+\/videos\/\?id=(.+)&part=contentDetails/),
                 status, callCallback;
             if (match) {
                 status = match[1].split('_');
@@ -223,6 +223,19 @@
     // Stub jQuery.scrollTo module.
     $.fn.scrollTo = jasmine.createSpy('jQuery.scrollTo');
 
+    // Stub window.Video.loadYouTubeIFrameAPI()
+    window.Video.loadYouTubeIFrameAPI = jasmine.createSpy('window.Video.loadYouTubeIFrameAPI').andReturn(
+        function (scriptTag) {
+            var event = document.createEvent('Event');
+            if (fixture === "video.html") {
+                event.initEvent('load', false, false);
+            } else {
+                event.initEvent('error', false, false);
+            }
+            scriptTag.dispatchEvent(event);
+        }
+    );
+
     jasmine.initializePlayer = function (fixture, params) {
         var state;
 
@@ -249,19 +262,6 @@
         }
 
         jasmine.stubRequests();
-
-        if (!window.Video.loadYouTubeIFrameAPI) {
-            spyOn(window.Video, 'loadYouTubeIFrameAPI').andCallFake(function (scriptTag) {
-                var event = document.createEvent('Event');
-                if (fixture === "video.html") {
-                    event.initEvent('load', false, false);
-                } else {
-                    event.initEvent('error', false, false);
-                }
-                scriptTag.dispatchEvent(event);
-            });
-        }
-
         state = new window.Video('#example');
 
         state.resizer = (function () {

@@ -22,7 +22,6 @@ import time
 import requests
 from urlparse import urlparse
 from collections import OrderedDict
-from django.conf import settings
 
 
 class StubYouTubeHandler(StubHttpRequestHandler):
@@ -118,19 +117,12 @@ class StubYouTubeHandler(StubHttpRequestHandler):
 
         # Construct the response content
         callback = self.get_params['callback']
-        youtube_metadata = json.loads(
-            requests.get(
-                "https://www.googleapis.com/youtube/v3/videos/?id={id}&part=contentDetails&key={key}".format(
-                    id=youtube_id,
-                    key=settings.XBLOCK_SETTINGS['VideoModule']['YOUTUBE_API_KEY']
-                )
-            ).text
-        )
+
         data = OrderedDict({
             'data': OrderedDict({
                 'id': youtube_id,
                 'message': message,
-                'duration': youtube_metadata['data']['duration'],
+                'duration': '2:00',
             })
         })
         response = "{cb}({data})".format(cb=callback, data=json.dumps(data))

@@ -33,7 +33,7 @@ function (VideoPlayer, i18n) {
 
         state.initialize(element)
             .done(function () {
-                if (state.isYoutubeType() && !state.speeds) {
+                if (state.isYoutubeType()) {
                     state.parseSpeed();
                 }
                 // On iPhones and iPods native controls are used.
