@@ -7,7 +7,7 @@ from urlparse import urlunparse
 
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
-from django.http import Http404, HttpResponseBadRequest
+from django.http import Http404
 
 from rest_framework.exceptions import PermissionDenied
 
@@ -293,7 +293,7 @@ def get_thread_list(
         if view in ["unread", "unanswered"]:
             query_params[view] = "true"
         else:
-            HttpResponseBadRequest("Invalid value for view: {}".format(view))
+            ValidationError({'view': ['Invalid value']})
 
     if following:
         threads, result_page, num_pages = context["cc_requester"].subscribed_threads(query_params)
