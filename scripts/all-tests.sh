@@ -55,7 +55,7 @@ set -e
 # Clean up previous builds
 git clean -qxfd
 
-if [ -n $JENKINS_URL]
+if [ -z $CIRCLECI ]
     then
         source scripts/jenkins-common.sh
 fi
