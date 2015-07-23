@@ -5,4 +5,3 @@ lazy==1.1
 path.py==7.2
 watchdog==0.7.1
 python-memcached
-six==1.9.0
