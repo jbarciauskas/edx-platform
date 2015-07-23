@@ -36,7 +36,7 @@ test:
   override:
     - case $CIRCLE_NODE_INDEX in 0) paver test_lib -l common/lib/calc ;; 1) paver test_system -t lms/djangoapps/courseware/tests/tests.py:ActivateLoginTest ;; 2) paver test_system -t cms/djangoapps/contentstore/tests/tests.py:AuthTestCase  ;; esac:
         parallel: true
-  post:
     - mkdir -p $CIRCLE_TEST_REPORTS/junit/
-    # - find . -type f -regex ".*/reports/.*xml" -exec cp {} $CIRCLE_TEST_REPORTS/junit/ \;
+        parallel: true
     - cp -r reports/. $CIRCLE_TEST_REPORTS/junit
+        parallel: true
