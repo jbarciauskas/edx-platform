@@ -34,7 +34,7 @@ dependencies:
 
 test:
   override:
-    - ./scripts/circle.sh:
+    - ./scripts/all_tests.sh:
         parallel: true
 
   post:

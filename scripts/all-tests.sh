@@ -55,7 +55,10 @@ set -e
 # Clean up previous builds
 git clean -qxfd
 
-source scripts/jenkins-common.sh
+if [ -n $JENKINS_URL]
+    then
+        source scripts/jenkins-common.sh
+fi
 
 # Violations thresholds for failing the build
 PYLINT_THRESHOLD=6600
@@ -67,6 +70,13 @@ JSHINT_THRESHOLD=3700
 # Note that you will still need to pass a value for 'TEST_SUITE'
 # or else no tests will be executed.
 SHARD=${SHARD:="all"}
+
+case $CIRCLE_NODE_INDEX in
+    0) TEST_SUITE="quality" ;;
+    1) TEST_SUITE="lms-unit" ;;
+    2) TEST_SUITE="cms-unit" ;;
+    3) TEST_SUITE="commonlib-js-unit" ;;
+esac
 
 case "$TEST_SUITE" in
 
