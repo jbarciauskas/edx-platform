@@ -9,6 +9,10 @@ dependencies:
 
     - paver install_prereqs
 
+machine:
+  python:
+    version: 2.7.3
+
 test:
   override:
     - ./scripts/circle.sh:
