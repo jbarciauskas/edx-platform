@@ -119,11 +119,14 @@ class StubYouTubeHandler(StubHttpRequestHandler):
         callback = self.get_params['callback']
 
         data = OrderedDict({
-            'data': OrderedDict({
-                'id': youtube_id,
-                'message': message,
-                'duration': '2:00',
-            })
+            'items': list(
+                OrderedDict({
+                    'contentDetails': OrderedDict({
+                        'id': youtube_id,
+                        'duration': 'PT2M20S',
+                    })
+                })
+            )
         })
         response = "{cb}({data})".format(cb=callback, data=json.dumps(data))
 
