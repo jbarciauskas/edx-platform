@@ -1683,8 +1683,7 @@ class TestXBlockInfo(ItemTest):
             parent_location=self.chapter.location, category='sequential',
             display_name="Test Lesson 1", user_id=self.user.id,
             is_proctored_enabled=True, is_time_limited=True,
-            default_time_limit_mins=100
-
+            default_time_limit_minutes=100
         )
         sequential = modulestore().get_item(sequential.location)
         xblock_info = create_xblock_info(
@@ -1695,7 +1694,7 @@ class TestXBlockInfo(ItemTest):
         # exam proctoring should be enabled and time limited.
         self.assertEqual(xblock_info['is_proctored_enabled'], True)
         self.assertEqual(xblock_info['is_time_limited'], True)
-        self.assertEqual(xblock_info['default_time_limit_mins'], 100)
+        self.assertEqual(xblock_info['default_time_limit_minutes'], 100)
 
 
 class TestLibraryXBlockInfo(ModuleStoreTestCase):

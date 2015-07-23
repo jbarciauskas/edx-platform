@@ -291,7 +291,7 @@ define(['jquery', 'backbone', 'underscore', 'gettext', 'js/views/baseview',
                 'timeFormat' : 'H:i',
                 'forceRoundTime': false
             });
-            this.setExamTime(this.model.get('default_time_limit_mins'));
+            this.setExamTime(this.model.get('default_time_limit_minutes'));
             this.setExamTmePreference(this.model.get('is_time_limited'));
             this.setExamProctoring(this.model.get('is_proctored_enabled'));
         },
@@ -331,7 +331,7 @@ define(['jquery', 'backbone', 'underscore', 'gettext', 'js/views/baseview',
             var total_time = (parseInt(time[0]) * 60) + parseInt(time[1]);
             return total_time;
         },
-        isExamProctoringEnable: function () {
+        isExamProctoringEnabled: function () {
             return this.$('#id_exam_proctoring').is(':checked');
         },
         getRequestData: function () {
@@ -339,8 +339,8 @@ define(['jquery', 'backbone', 'underscore', 'gettext', 'js/views/baseview',
             return {
                 metadata: {
                     'is_time_limited': this.isExamTimeEnabled(),
-                    'is_proctored_enabled': this.isExamProctoringEnable(),
-                    'default_time_limit_mins': this.convertTimeLimitToMinutes(time_limit)
+                    'is_proctored_enabled': this.isExamProctoringEnabled(),
+                    'default_time_limit_minutes': this.convertTimeLimitToMinutes(time_limit)
                 }
             };
         }

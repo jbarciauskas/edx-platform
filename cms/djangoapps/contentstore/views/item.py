@@ -853,9 +853,9 @@ def create_xblock_info(xblock, data=None, metadata=None, include_ancestor_info=F
         "enable_proctored_exams": enable_proctored_exams,
         "is_proctored_enabled": xblock.is_proctored_enabled if xblock.category == 'sequential' else False,
         "is_time_limited": xblock.is_time_limited if xblock.category == 'sequential' else False,
-        "default_time_limit_mins": getattr(
+        "default_time_limit_minutes": getattr(
             xblock,
-            'default_time_limit_mins', '00:00'
+            'default_time_limit_minutes', '00:00'
         ) if xblock.category == 'sequential' else '00:00'
     }
 

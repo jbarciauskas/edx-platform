@@ -621,7 +621,7 @@ define(["jquery", "common/js/spec_helpers/ajax_helpers", "js/views/utils/view_ut
                             staff_only_message: true,
                             "is_time_limited": true,
                             "is_proctored_enabled": true,
-                            "default_time_limit_mins": 150
+                            "default_time_limit_minutes": 150
                         }, [
                             createMockVerticalJSON({
                                 has_changes: true,
@@ -707,7 +707,7 @@ define(["jquery", "common/js/spec_helpers/ajax_helpers", "js/views/utils/view_ut
                             "due":"2014-07-10T00:00:00.000Z",
                             "is_time_limited": true,
                             "is_proctored_enabled": true,
-                            "default_time_limit_mins": 150
+                            "default_time_limit_minutes": 150
                         }
                     });
                     expect(requests[0].requestHeaders['X-HTTP-Method-Override']).toBe('PATCH');

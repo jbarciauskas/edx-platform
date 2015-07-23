@@ -141,7 +141,7 @@ define(["jquery", "underscore", "js/views/xblock_outline", "js/views/utils/view_
 
             editXBlock: function() {
                 var enable_proctored_exams = false;
-                if (this.model.get('category') == 'sequential') {
+                if (this.model.get('category') === 'sequential') {
                     enable_proctored_exams = this.parentView.parentView.model.get('enable_proctored_exams');
                 }
                 var modal = CourseOutlineModalsFactory.getModal('edit', this.model, {

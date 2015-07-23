@@ -44,7 +44,7 @@ class TestProctoredExams(ModuleStoreTestCase):
             display_name='Test Proctored Exam',
             graded=True,
             is_time_limited=True,
-            default_time_limit_mins=10,
+            default_time_limit_minutes=10,
             is_proctored_enabled=True
         )
 
@@ -58,7 +58,7 @@ class TestProctoredExams(ModuleStoreTestCase):
         self.assertEqual(exam['course_id'], unicode(self.course.id))
         self.assertEqual(exam['content_id'], unicode(sequence.location))
         self.assertEqual(exam['exam_name'], sequence.display_name)
-        self.assertEqual(exam['time_limit_mins'], sequence.default_time_limit_mins)
+        self.assertEqual(exam['time_limit_mins'], sequence.default_time_limit_minutes)
         self.assertEqual(exam['is_proctored'], sequence.is_proctored_enabled)
         self.assertEqual(exam['is_active'], True)
 
@@ -75,14 +75,14 @@ class TestProctoredExams(ModuleStoreTestCase):
             display_name='Test Proctored Exam',
             graded=True,
             is_time_limited=True,
-            default_time_limit_mins=10,
+            default_time_limit_minutes=10,
             is_proctored_enabled=True
         )
 
         listen_for_course_publish(self, self.course.id)
 
         # update the sequence
-        sequence.default_time_limit_mins = 20
+        sequence.default_time_limit_minutes = 20
         self.store.update_item(sequence, self.user.id)
 
         # simulate a publish
@@ -97,7 +97,7 @@ class TestProctoredExams(ModuleStoreTestCase):
         self.assertEqual(exam['course_id'], unicode(self.course.id))
         self.assertEqual(exam['content_id'], unicode(sequence.location))
         self.assertEqual(exam['exam_name'], sequence.display_name)
-        self.assertEqual(exam['time_limit_mins'], sequence.default_time_limit_mins)
+        self.assertEqual(exam['time_limit_mins'], sequence.default_time_limit_minutes)
         self.assertEqual(exam['is_proctored'], sequence.is_proctored_enabled)
         self.assertEqual(exam['is_active'], True)
 
@@ -114,7 +114,7 @@ class TestProctoredExams(ModuleStoreTestCase):
             display_name='Test Proctored Exam',
             graded=True,
             is_time_limited=True,
-            default_time_limit_mins=10,
+            default_time_limit_minutes=10,
             is_proctored_enabled=False
         )
 
@@ -128,7 +128,7 @@ class TestProctoredExams(ModuleStoreTestCase):
         self.assertEqual(exam['course_id'], unicode(self.course.id))
         self.assertEqual(exam['content_id'], unicode(sequence.location))
         self.assertEqual(exam['exam_name'], sequence.display_name)
-        self.assertEqual(exam['time_limit_mins'], sequence.default_time_limit_mins)
+        self.assertEqual(exam['time_limit_mins'], sequence.default_time_limit_minutes)
         self.assertEqual(exam['is_proctored'], sequence.is_proctored_enabled)
         self.assertEqual(exam['is_active'], True)
 
@@ -145,7 +145,7 @@ class TestProctoredExams(ModuleStoreTestCase):
             display_name='Test Proctored Exam',
             graded=True,
             is_time_limited=True,
-            default_time_limit_mins=10,
+            default_time_limit_minutes=10,
             is_proctored_enabled=True
         )
 
@@ -179,7 +179,7 @@ class TestProctoredExams(ModuleStoreTestCase):
             display_name='Test Proctored Exam',
             graded=True,
             is_time_limited=True,
-            default_time_limit_mins=10,
+            default_time_limit_minutes=10,
             is_proctored_enabled=True
         )
 
@@ -214,7 +214,7 @@ class TestProctoredExams(ModuleStoreTestCase):
             display_name='Test Proctored Exam',
             graded=True,
             is_time_limited=True,
-            default_time_limit_mins=10,
+            default_time_limit_minutes=10,
             is_proctored_enabled=True
         )
 
@@ -242,7 +242,7 @@ class TestProctoredExams(ModuleStoreTestCase):
             display_name='Test Proctored Exam',
             graded=True,
             is_time_limited=True,
-            default_time_limit_mins=10,
+            default_time_limit_minutes=10,
             is_proctored_enabled=True
         )
 

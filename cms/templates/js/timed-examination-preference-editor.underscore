@@ -1,5 +1,5 @@
 <form>
-    <h3 class="modal-section-title"><%= gettext('Timed Exam') %></h3>
+    <h3 class="modal-section-title"><%- gettext('Timed Exam') %></h3>
     <div class="modal-section-content has-actions">
         <div class='exam-time-list-fields'>
             <ul class="list-fields list-input">
@@ -8,7 +8,7 @@
                     <label for="id_timed_examination" class="label">
                       <i class="icon fa fa-check-square-o input-checkbox-checked"></i>
                       <i class="icon fa fa-square-o input-checkbox-unchecked"></i>
-                      <%= gettext('This exam is timed') %>
+                      <%- gettext('This exam is timed') %>
                     </label>
                 </li>
             </ul>
@@ -16,12 +16,12 @@
         <div class='exam-time-list-fields'>
             <ul class="list-fields list-input time-limit">
                 <li class="field field-text field-time-limit">
-                    <label for="id_time_limit" class="label"><%= gettext('Time Allotted (HH:MM):') %></label>
+                    <label for="id_time_limit" class="label"><%- gettext('Time Allotted (HH:MM):') %></label>
                     <input type="text" id="id_time_limit" name="time_limit"
                       value=""
                       placeholder="HH:MM" class="time_limit release-time time input input-text" autocomplete="off" />
                 </li>
-                <p class='field-message'><%= gettext('Students see a warning before time expires. To allow a specific student additional time to complete this exam, you can create an allowance in the Proctoring tab in the LMS.') %></p>
+                <p class='field-message'><%- gettext('Students see warnings when 20% and 5% of the allotted time remains. In certain cases, students can be granted allowances that give them extra time to complete the exam.') %></p>
             </ul>
         </div>
         <ul class="list-fields list-input">
@@ -30,10 +30,10 @@
                 <label for="id_exam_proctoring" class="label">
                     <i class="icon fa fa-check-square-o input-checkbox-checked"></i>
                       <i class="icon fa fa-square-o input-checkbox-unchecked"></i>
-                      <%= gettext('This exam is proctored') %>
+                      <%- gettext('This exam is proctored') %>
                 </label>
             </li>
-            <p class='field-message'> <%= gettext('Students can choose to take this exam with or without online proctoring, but only students who choose the proctored option are eligible for credit. Proctored exams must also be timed exams.') %> </p>
+            <p class='field-message'> <%- gettext('Students can choose to take this exam with or without online proctoring, but only students who choose the proctored option are eligible for credit. Proctored exams must also be timed exams.') %> </p>
         </ul>
     </div>
 </form>

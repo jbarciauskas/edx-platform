@@ -63,7 +63,7 @@ class ProctoringFields(object):
         scope=Scope.settings,
     )
 
-    default_time_limit_mins = Integer(
+    default_time_limit_minutes = Integer(
         display_name=_("Time Limit in Minutes"),
         help=_(
             "The number of minutes available to students for viewing or interacting with this courseware component."

@@ -8,6 +8,8 @@ from django.conf import settings
 
 from xmodule.modulestore.django import modulestore
 
+from contentstore.views.helpers import is_item_in_course_tree
+
 from edx_proctoring.api import (
     get_exam_by_content_id,
     update_exam,
@@ -19,20 +21,6 @@ from edx_proctoring.exceptions import (
 )
 
 log = logging.getLogger(__name__)
-
-
-def _is_in_course_tree(item):
-    """
-    Check that the item is in the course tree.
-
-    It's possible that the item is not in the course tree
-    if its parent has been deleted and is now an orphan.
-    """
-    ancestor = item.get_parent()
-    while ancestor is not None and ancestor.location.category != "course":
-        ancestor = ancestor.get_parent()
-
-    return ancestor is not None
 
 
 def register_proctored_exams(course_key):
@@ -67,7 +55,7 @@ def register_proctored_exams(course_key):
     timed_exams = [
         timed_exam
         for timed_exam in _timed_exams
-        if _is_in_course_tree(timed_exam)
+        if is_item_in_course_tree(timed_exam)
     ]
 
     # enumerate over list of sequences which are time-limited and
@@ -86,7 +74,7 @@ def register_proctored_exams(course_key):
             update_exam(
                 exam_id=exam['id'],
                 exam_name=timed_exam.display_name,
-                time_limit_mins=timed_exam.default_time_limit_mins,
+                time_limit_mins=timed_exam.default_time_limit_minutes,
                 is_proctored=timed_exam.is_proctored_enabled,
                 is_active=True
             )
@@ -97,7 +85,7 @@ def register_proctored_exams(course_key):
                 course_id=unicode(course_key),
                 content_id=unicode(timed_exam.location),
                 exam_name=timed_exam.display_name,
-                time_limit_mins=timed_exam.default_time_limit_mins,
+                time_limit_mins=timed_exam.default_time_limit_minutes,
                 is_proctored=timed_exam.is_proctored_enabled,
                 is_active=True
             )
