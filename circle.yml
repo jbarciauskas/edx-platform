@@ -33,6 +33,11 @@ dependencies:
     - pip install -r requirements/edx/post.txt
 
 test:
+  pre:
+    - mkdir -p $CIRCLE_TEST_REPORTS/junit
   override:
     - ./scripts/circle.sh:
-        parallel: true
+      parallel: true
+  post:
+    - cp -r reports/. $CIRCLE_TEST_REPORTS/junit:
+      parallel: true
