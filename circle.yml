@@ -15,6 +15,7 @@ dependencies:
     - pip install -r requirements/edx/pre.txt
     - pip install -r requirements/edx/github.txt
     - pip install -r requirements/edx/local.txt
+
     # HACK: within base.txt stevedore had a
     # dependency on a version range of pbr.
     # Install a version which falls within that range.
@@ -26,12 +27,12 @@ machine:
   python:
     version: 2.7.3
 
-test:
-  override:
-    - ./scripts/circle.sh:
-        parallel: true
-
 general:
   artifacts:
     - "reports"
     - "test_root/log"
+
+test:
+  override:
+    - case $CIRCLE_NODE_INDEX in 0) paver test_lib -l common/lib/xmodule ;; 1) paver test_system -t lms/djangoapps/courseware/tests/tests.py:ActivateLoginTest ;; 2) paver test_system -t cms/djangoapps/contentstore/tests/tests.py:AuthTestCase  ;; esac:
+        parallel: true
