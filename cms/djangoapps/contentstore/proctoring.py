@@ -111,5 +111,6 @@ def register_proctored_exams(course_key):
                 log.info(msg)
                 update_exam(
                     exam_id=exam['id'],
+                    is_proctored=False,
                     is_active=False,
                 )

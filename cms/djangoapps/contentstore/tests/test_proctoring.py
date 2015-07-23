@@ -3,7 +3,7 @@ Tests for the edx_proctoring integration into Studio
 """
 
 from mock import patch
-
+import ddt
 from xmodule.modulestore.tests.django_utils import ModuleStoreTestCase
 from xmodule.modulestore.tests.factories import CourseFactory, ItemFactory
 
@@ -12,6 +12,7 @@ from contentstore.signals import listen_for_course_publish
 from edx_proctoring.api import get_all_exams_for_course
 
 
+@ddt.ddt
 @patch.dict('django.conf.settings.FEATURES', {'ENABLE_PROCTORED_EXAMS': True})
 class TestProctoredExams(ModuleStoreTestCase):
     """
@@ -31,7 +32,31 @@ class TestProctoredExams(ModuleStoreTestCase):
             enable_proctored_exams=True
         )
 
-    def test_publishing_proctored_exam(self):
+    def _verify_exam_data(self, sequence, expected_active):
+        """
+        Helper method to compare the sequence with the stored exam,
+        which should just be a single one
+        """
+        exams = get_all_exams_for_course(unicode(self.course.id))
+
+        self.assertEqual(len(exams), 1)
+
+        exam = exams[0]
+        self.assertEqual(exam['course_id'], unicode(self.course.id))
+        self.assertEqual(exam['content_id'], unicode(sequence.location))
+        self.assertEqual(exam['exam_name'], sequence.display_name)
+        self.assertEqual(exam['time_limit_mins'], sequence.default_time_limit_minutes)
+        self.assertEqual(exam['is_proctored'], sequence.is_proctored_enabled)
+        self.assertEqual(exam['is_active'], expected_active)
+
+    @ddt.data(
+        (True, 10, True, True, False),
+        (True, 10, False, True, False),
+        (True, 10, True, True, True),
+    )
+    @ddt.unpack
+    def test_publishing_exam(self, is_time_limited, default_time_limit_minutes,
+                             is_procted_enabled, expected_active, republish):
         """
         Happy path testing to see that when a course is published which contains
         a proctored exam, it will also put an entry into the exam tables
@@ -43,94 +68,25 @@ class TestProctoredExams(ModuleStoreTestCase):
             category='sequential',
             display_name='Test Proctored Exam',
             graded=True,
-            is_time_limited=True,
-            default_time_limit_minutes=10,
-            is_proctored_enabled=True
+            is_time_limited=is_time_limited,
+            default_time_limit_minutes=default_time_limit_minutes,
+            is_proctored_enabled=is_procted_enabled
         )
 
         listen_for_course_publish(self, self.course.id)
 
-        exams = get_all_exams_for_course(unicode(self.course.id))
+        self._verify_exam_data(sequence, expected_active)
 
-        self.assertEqual(len(exams), 1)
+        if republish:
+            # update the sequence
+            sequence.default_time_limit_minutes += sequence.default_time_limit_minutes
+            self.store.update_item(sequence, self.user.id)
 
-        exam = exams[0]
-        self.assertEqual(exam['course_id'], unicode(self.course.id))
-        self.assertEqual(exam['content_id'], unicode(sequence.location))
-        self.assertEqual(exam['exam_name'], sequence.display_name)
-        self.assertEqual(exam['time_limit_mins'], sequence.default_time_limit_minutes)
-        self.assertEqual(exam['is_proctored'], sequence.is_proctored_enabled)
-        self.assertEqual(exam['is_active'], True)
+            # simulate a publish
+            listen_for_course_publish(self, self.course.id)
 
-    def test_republishing_proctored_exam(self):
-        """
-        Make sure we can update a exam sequence and the changes also take effect
-        in the edx_proctoring tables
-        """
-
-        chapter = ItemFactory.create(parent=self.course, category='chapter', display_name='Test Section')
-        sequence = ItemFactory.create(
-            parent=chapter,
-            category='sequential',
-            display_name='Test Proctored Exam',
-            graded=True,
-            is_time_limited=True,
-            default_time_limit_minutes=10,
-            is_proctored_enabled=True
-        )
-
-        listen_for_course_publish(self, self.course.id)
-
-        # update the sequence
-        sequence.default_time_limit_minutes = 20
-        self.store.update_item(sequence, self.user.id)
-
-        # simulate a publish
-        listen_for_course_publish(self, self.course.id)
-
-        # make sure that what we read back is what is expected
-        exams = get_all_exams_for_course(unicode(self.course.id))
-
-        self.assertEqual(len(exams), 1)
-
-        exam = exams[0]
-        self.assertEqual(exam['course_id'], unicode(self.course.id))
-        self.assertEqual(exam['content_id'], unicode(sequence.location))
-        self.assertEqual(exam['exam_name'], sequence.display_name)
-        self.assertEqual(exam['time_limit_mins'], sequence.default_time_limit_minutes)
-        self.assertEqual(exam['is_proctored'], sequence.is_proctored_enabled)
-        self.assertEqual(exam['is_active'], True)
-
-    def test_publishing_timed_exam(self):
-        """
-        Happy path testing to see that when a course is published which contains
-        a timed exam, it will also put an entry into the exam tables
-        """
-
-        chapter = ItemFactory.create(parent=self.course, category='chapter', display_name='Test Section')
-        sequence = ItemFactory.create(
-            parent=chapter,
-            category='sequential',
-            display_name='Test Proctored Exam',
-            graded=True,
-            is_time_limited=True,
-            default_time_limit_minutes=10,
-            is_proctored_enabled=False
-        )
-
-        listen_for_course_publish(self, self.course.id)
-
-        exams = get_all_exams_for_course(unicode(self.course.id))
-
-        self.assertEqual(len(exams), 1)
-
-        exam = exams[0]
-        self.assertEqual(exam['course_id'], unicode(self.course.id))
-        self.assertEqual(exam['content_id'], unicode(sequence.location))
-        self.assertEqual(exam['exam_name'], sequence.display_name)
-        self.assertEqual(exam['time_limit_mins'], sequence.default_time_limit_minutes)
-        self.assertEqual(exam['is_proctored'], sequence.is_proctored_enabled)
-        self.assertEqual(exam['is_active'], True)
+            # reverify
+            self._verify_exam_data(sequence, expected_active)
 
     def test_unpublishing_proctored_exam(self):
         """
@@ -161,11 +117,7 @@ class TestProctoredExams(ModuleStoreTestCase):
 
         listen_for_course_publish(self, self.course.id)
 
-        exams = get_all_exams_for_course(unicode(self.course.id))
-        self.assertEqual(len(exams), 1)
-
-        exam = exams[0]
-        self.assertEqual(exam['is_active'], False)
+        self._verify_exam_data(sequence, False)
 
     def test_dangling_exam(self):
         """
