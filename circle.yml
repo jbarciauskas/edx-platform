@@ -7,21 +7,20 @@ dependencies:
     - pip install distribute==0.6.49
     - pip install -r requirements/edx/paver.txt
 
-    # Mirror what paver install_prereqs does
+    # Mirror what paver install_prereqs does.
+    # After a successful build, CircleCI will
+    # cache the virtualenv at that state, so that
+    # the next build will not need to install them
+    # from scratch again.
     - pip install -r requirements/edx/pre.txt
     - pip install -r requirements/edx/github.txt
     - pip install -r requirements/edx/local.txt
-    # Within base.txt stevedore had a dependency
-    # on a version range of pbr. Install a version
-    # that falls within that range.
+    # HACK: within base.txt stevedore had a
+    # dependency on a version range of pbr.
+    # Install a version which falls within that range.
     - pip install pbr==0.9.0
     - pip install -r requirements/edx/base.txt
     - pip install -r requirements/edx/post.txt
-
-  # post:
-    # Now run install_prereqs in case something else
-    # has changed. I *think* this should be a no-op.
-    # - paver install_prereqs
 
 machine:
   python:
