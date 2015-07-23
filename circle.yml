@@ -35,9 +35,9 @@ dependencies:
 test:
   override:
     - ./scripts/circle.sh:
-      parallel: true
+        parallel: true
 
   post:
     - mkdir -p $CIRCLE_TEST_REPORTS/junit
     - cp -r reports/. $CIRCLE_TEST_REPORTS/junit:
-      parallel: true
+        parallel: true
