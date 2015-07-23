@@ -3,6 +3,7 @@ dependencies:
     - pip install setuptools==0.6c11
     - pip install distribute==0.6.49
     - pip install pbr==0.9.0
+    - pip install -r requirements/edx/paver.txt
 
     - paver install_prereqs
 
