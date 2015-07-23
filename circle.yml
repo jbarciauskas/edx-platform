@@ -30,3 +30,8 @@ test:
   override:
     - ./scripts/circle.sh:
         parallel: true
+
+general:
+  artifacts:
+    - "reports"
+    - "test_root/log"

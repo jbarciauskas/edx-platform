@@ -7,9 +7,3 @@ case $CIRCLE_NODE_INDEX in
 
     2) paver test_system -t cms/djangoapps/contentstore/tests/tests.py:AuthTestCase  ;;
 esac
-
-RET=$?
-
-cp -r reports/. $CIRCLE_TEST_REPORTS
-
-exit $RET
